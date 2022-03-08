@@ -1,7 +1,6 @@
 Cryptoart with a new type of blockchain - Ouroboros Manna From Heaven.  
 Read file white-paper.txt in this package to learh how to become a keeper and get 1 manna for each vertebra(block) of ouroboros.  
-Or read it here:  
-[white-paper](https://www.fastchooser.com/Manna-from-Heaven-Cryptoart-with-Ouroboros-Blockchain-DLT)
+Or read it here: [white-paper](https://www.fastchooser.com/Manna-from-Heaven-Cryptoart-with-Ouroboros-Blockchain-DLT)
 
 Install
 ----------------
