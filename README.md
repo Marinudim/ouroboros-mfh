@@ -26,15 +26,18 @@ global.ouroborosMFH = database.collection('ouroborosMFH')
 Additional instruction
 ----------------
 ```
-Also, file ouroboros-mfh.ejs is designed for the client side. You can use another view engine with your modifications. Your own site page gives you full control over security. It is the best way to protect your private key.
+Also, file ouroboros-mfh.ejs is designed for the client side. You can use another view engine with your  
+modifications. Your own site page gives you full control over security. It is the best way to protect  
+your private key.  
 
-Url https://www.letterevo.com/Ouroboros-MFH for transactions. Be free to watch javascript code on that
-page to be sure, we don't receive your private key.
+Url https://www.letterevo.com/Ouroboros-MFH for transactions. Be free to watch javascript code on that  
+page to be sure, we don't receive your private key.  
 ```
 
 Related
-```html
-<a href='https://github.com/davidbau/seedrandom'>seedrandom</a>
+----------------
+```
+[seedrandom](https://github.com/davidbau/seedrandom')
 ```
 
 License
