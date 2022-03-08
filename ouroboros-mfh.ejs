@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+
+    <title>Ouroboros MFH</title>
+</head>
+<style>
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+        opacity: 0;
+        background-color: rgba(55, 8, 61, .726);
+        z-index: 100;
+        user-select: none;
+        transition: opacity 250ms;
+    }
+
+    .exhibit-number input {
+        width: 484px;
+        text-align: center;
+        padding: 4px 2px;
+    }
+
+    .inp-form {
+        background-color: rgb(28, 51, 66);
+        color: rgb(188, 212, 202);
+        border: none;
+    }
+
+    .mark-txt {
+        font-size: 1rem;
+        max-width: 540px;
+        text-align: left;
+        text-indent: 48px;
+        margin: auto;
+        padding: 4px 0;
+    }
+
+    .btn {
+        font-size: 1.1rem;
+        padding: 5px 8px;
+        cursor: pointer;
+        border: none;
+        border-radius: 4px;
+        background-color: rgb(55, 82, 107);
+        color: rgb(220, 236, 231);
+    }
+
+    .btn:active {
+        transform: translateY(2px);
+    }
+
+    .input-file {
+        width: 100px;
+        font-size: 1rem;
+        background-color: rgb(43, 73, 88);
+        text-align: left;
+        cursor: pointer;
+        padding: 2px;
+        border: 1px solid rgb(25, 91, 129);
+        border-radius: 3px;
+    }
+
+    input[type=file] {
+        display: none;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    a:link,
+    a:visited {
+        color: rgb(211, 221, 202);
+    }
+
+    .manna-deals input,
+    .manna-deals .spinp {
+        display: inline-block;
+        font-size: 1rem;
+        width: 98%;
+        padding: 4px;
+    }
+
+    .epp {
+        font-size: 1.2rem;
+    }
+
+    .deal_data {
+        margin-left: 12%;
+        margin-bottom: 4px;
+    }
+</style>
+
+<body style="background-color:rgb(29, 25, 25);color:rgb(211, 221, 202)">
+
+    <section class='mfh' style='text-align:center;font-family:monospace;font-size:1rem;'>
+        <img src='https://www.letterevo.com/ouroboros-mfh.png' style='max-width:100%;' />
+
+        <div class="o-mfh"></div>
+
+        <div style='margin-bottom:16px;'>
+            <button class='new-exhibit btn'>new exhibit</button>
+            <button class='share-manna btn'>share manna</button>
+            <button class='btn color-font'><a class='save-keys'>save keys</a></button>
+            <button class="load-keys btn">
+                <label for='keys-file' style="cursor:pointer;">load keys</label>
+                <input type="file" id="keys-file" class="input-file">
+            </button>
+        </div>
+
+        <div class='exhibit-number'>
+            <div class='epp'>exhibit number</div>
+            <div class='mark-txt'>Exhibit number is the address of ouroboros's piece, something like a wallet account.
+            </div>
+            <input type="text" style='font-size:1.1rem;' class='inp-form' />
+        </div>
+        <div class='public-key'>
+            <div class='epp'>public key</div>
+            <div class='mark-txt'>Public key is used by keepers to check if signature has been created by private key.
+            </div>
+            <textarea name="" id="" cols="56" rows="8" class='inp-form'></textarea>
+        </div>
+        <div class='private-key'>
+            <div class='epp'>private key</div>
+            <div class='mark-txt'>Private key is used only by you to sign a deal. Do not give it to anyone.</div>
+            <textarea name="" id="" cols="64" rows="12" class='inp-form'></textarea>
+        </div>
+
+        <section class='manna-deals overlay'>
+            <div class='cancel' style='z-index:50;width:100vw;height:100vh;'></div>
+            <div class="deal-window"
+                style='background-color:rgb(24, 93, 110);border:1px solid rgb(162, 179, 199);padding:8px 24px;text-align:left;position:fixed;z-index:100;top:8%;left:50%;transform:translate(-50%);max-width:530px;'>
+                <div style='text-align:center;margin:8px;'>
+                    <img src='https://www.letterevo.com/manna-88.png' />
+                </div>
+                <div style='text-align:right;'>
+                    <div class='total-amount'>...</div>
+                    <button class='get-total-amount btn'>get total
+                        amount</button>
+                </div>
+                <div>from:<br /><span class='exhibit bg-tr border'>...</span></div>
+                <div>to:<br /><input class='to-exhibit' /></div>
+                <div>amount:<br /><input class='amount' style='width:auto;' /></div>
+                <div>timestamp:<br /><span class='timestamp bg-tr border'></span></div>
+                <div>message:<br />
+                    <input class='message' type='text' maxlength="300" placeholder='' />
+                </div>
+                <div>signature:<br />
+                    <div class='signature spinp'>...</div>
+                </div>
+                <div style='margin:16px 32px;text-align:right;'>
+                    <button class='sign btn'>sign&share</button>
+                </div>
+            </div>
+            <div class="confirmation"
+                style='display:none;background-color:rgb(24, 93, 110);border:1px solid rgb(162, 179, 199);padding:8px 24px;text-align:left;position:fixed;z-index:100;top:8%;left:50%;transform:translate(-50%);max-width:530px;'>
+            </div>
+        </section>
+
+        <div class="creator" style="text-align:left;width:500px;margin:auto;margin-top:48px;"></div>
+        <div class="o-mfh2" style="text-align:left;width:500px;margin:auto;"></div>
+
+    </section>
+
+    <div class='length-mfh' style='position:fixed;bottom:16px;left:0;font-size:1.4rem;'></div>
+
+    <script>
+
+        // Open-source code for client side.
+        // Please be careful not to send private keys to a server not to be compromised.
+
+        const mfh = document.querySelector('.mfh')
+
+        function readSingleFile(e) {
+            let file = e.target.files[0]
+            if (!file) return;
+            let reader = new FileReader()
+            reader.onload = function (e) {
+                let contents = e.target.result;
+                displayKeys(contents)
+                mfh.querySelector('#keys-file').value = '';
+            }
+            reader.readAsText(file)
+        } // func read single file
+        function displayKeys(contents) {
+            let keys = contents.replace('exhibit: ', '')
+                .replace('public key', '')
+                .replace('private key', '')
+                .replace(/(\r\n|\n|\r)/gm, '')
+                .split(': ')
+            mfh.querySelector('.exhibit-number input').value = keys[0];
+            mfh.querySelector('.public-key textarea').value = keys[1];
+            mfh.querySelector('.private-key textarea').value = keys[2];
+        } // func displayKeys
+        mfh.querySelector('.load-keys').addEventListener('change', readSingleFile, false)
+
+        const dealWindow = document.querySelector('.deal-window')
+        const confirmation = document.querySelector('.confirmation')
+        mfh.addEventListener('click', async e => {
+            switch (e.target.classList[0]) {
+                case 'sign': { // sign and share
+                    // close deal window
+                    dealWindow.style.display = 'none';
+                    confirmation.style.display = 'block';
+                    confirmation.innerHTML = 'request processing...';
+
+                    signVerify()
+                    const deals = mfh.querySelector('.manna-deals')
+                    setTimeout(async () => {
+
+                        let response = await ajaxRequest({
+                            wh: 'deal',
+                            deal: {
+                                f: deals.querySelector('.exhibit').textContent, // payer exhibit                            
+                                t: deals.querySelector('.to-exhibit').value, // payee's exhibit
+                                a: Number(deals.querySelector('.amount').value), // amount [>10000 for keeper]
+                                d: signifedTimestamp, // timestamp
+                                m: deals.querySelector('.message').value, // message <add>site_name
+                                p: mfh.querySelector('.public-key textarea').value, // payer public key
+                                r: deals.querySelector('.signature').dataset.sign, // signature
+                            }
+                        })
+                        if (!response.status) {
+                            response.status = 'incorect server response';
+                        }
+                        confirmation.innerHTML = `<div>${response.status}<br />${response.err}</div>`;
+                    }, 1000)
+                }; break;
+                case 'share-manna': {
+                    dealWindow.style.display = 'block';
+                    confirmation.style.display = 'none';
+                    if (document.querySelector('.inp-form').value.trim() == '') { break; }
+                    const mannaDeals = mfh.querySelector('.manna-deals')
+                    mfh.querySelector('.total-amount').textContent = '...';
+                    mannaDeals.querySelector('.exhibit').textContent =
+                        mfh.querySelector('.exhibit-number input').value;
+                    mannaDeals.style.opacity = 1;
+                    mannaDeals.style.visibility = 'visible';
+                    mannaDeals.querySelector('.to-exhibit').value = '';
+                    mannaDeals.querySelector('.amount').value = '';
+                    mannaDeals.querySelector('.message').value = '';
+                    mannaDeals.querySelector('.signature').textContent = '...';
+                }; break;
+                case 'cancel': {
+                    e.target.parentElement.style.opacity = 0;
+                    e.target.parentElement.style.visibility = 'hidden';
+                }; break;
+                case 'save-keys': {
+                    if (document.querySelector('.inp-form').value.trim() == '') { break; }
+                    // create blob object
+                    let myBlob = new Blob(
+                        [
+                            `exhibit: ${mfh.querySelector('.exhibit-number input').value}
+public key: ${mfh.querySelector('.public-key textarea').value}
+private key: ${mfh.querySelector('.private-key textarea').value}`
+                        ],
+                        { type: 'text/plain' }
+                    )
+                    let url = window.URL.createObjectURL(myBlob)
+                    mfh.querySelector('.save-keys').href = url;
+                    mfh.querySelector('.save-keys').download = 'ouroboros-mfh.txt';
+                }; break;
+                case 'new-exhibit': {
+                    const arr = 'Ouroboros MFH ';
+                    let length = arr.length - 1;
+                    let i = 0;
+                    mfh.querySelector('.exhibit-number input').value = '';
+                    mfh.querySelector('.public-key textarea').value = '';
+                    mfh.querySelector('.private-key textarea').value = '';
+                    let interval = setInterval(() => {
+                        mfh.querySelector('.exhibit-number input').value += arr[i];
+                        mfh.querySelector('.public-key textarea').value += arr[i];
+                        mfh.querySelector('.private-key textarea').value += arr[i];
+                        i++;
+                        if (i > length) i = 0;
+                    }, 50)
+                    let next = await new Promise((resolve, reject) => {
+                        setTimeout(() => { resolve() }, 1200)
+                    })
+                    let keys = await generateKey()
+                    clearInterval(interval)
+                    mfh.querySelector('.exhibit-number input').value = keys.exhibit;
+                    mfh.querySelector('.public-key textarea').value = keys.publicKey;
+                    mfh.querySelector('.private-key textarea').value = keys.privateKey;
+                }; break;
+                case 'get-total-amount': {
+                    let result = await ajaxRequest({ wh: 'balance', exhibit: mfh.querySelector('.exhibit').textContent.trim() })
+                    mfh.querySelector('.total-amount').textContent = result.balance.b;
+                }; break;
+            } // switch class list 0
+        })
+
+        const oMfh = document.querySelector('.o-mfh')
+        const creator = document.querySelector('.creator')
+        const oMfh2 = document.querySelector('.o-mfh2')
+        setInterval(async () => {
+            let resp = await ajaxRequest({ wh: 'head' }) // get last vertebra - head
+            if (resp.err === 'error data') {
+                return
+            }
+            oMfh.innerHTML = `head: ${resp.head.h}, tail: ${resp.head.t}, time: ${(new Date(resp.head.d)).toLocaleTimeString('en-US', timeOptions)}`;
+            oMfh2.innerHTML = `keepers: ${resp.head.n}<br />
+            hash: ${resp.head.c}<br />
+            previous hash: ${resp.head.p}<br />
+            end: ${resp.head.e}<br /><br />`;
+            let deals = 'Deals:<br />';
+            for (let deal in resp.head) {
+                if (deal.length === 43) {
+                    if (resp.head[deal].f) { // from
+                        if (resp.head[deal].f === 'Ouroboros-MFH') {
+                            if (resp.head[deal].h) {
+                                if (resp.head[deal].h === resp.head.h) {
+                                    creator.innerHTML = `creator: domain - ${resp.head[deal].d.replace(/_/g, '.')}, number - ${resp.head[deal].n}`;
+                                }
+                            }
+                        }
+                        deals += `${deal}:<div class='deal_data'>from: ${resp.head[deal].f}<br />amount: ${resp.head[deal].a}<br />balance: ${resp.head[deal].b}<br />message: ${resp.head[deal].m}</div>`;
+                    } else { // to
+                        deals += `${deal}:<div class='deal_data'>to: ${resp.head[deal].t}<br />amount: ${resp.head[deal].a}<br />balance: ${resp.head[deal].b}<br />stamp: ${resp.head[deal].s}</div>`;
+                    }
+                }
+            }
+            oMfh2.innerHTML += deals;
+        }, 1500)
+
+        async function generateKey() {
+            let keyPair = await window.crypto.subtle.generateKey( // { algorithm, extractable, keyUsage }
+                {
+                    name: "RSA-PSS",
+                    modulusLength: 4096,
+                    publicExponent: new Uint8Array([1, 256, 65537]),
+                    hash: "SHA-256"
+                },
+                true,
+                ["sign", "verify"]
+            );
+
+            const priv = await window.crypto.subtle.exportKey( // get private key from keyPair RSA-PSS
+                "pkcs8", keyPair.privateKey
+            );
+            const publ = await window.crypto.subtle.exportKey(
+                "spki", keyPair.publicKey
+            );
+
+            const privExportedAsBase64 = window.btoa(
+                String.fromCharCode.apply(null, new Uint8Array(priv))
+            )
+            const publExportedAsBase64 = window.btoa(
+                String.fromCharCode.apply(null, new Uint8Array(publ))
+            )
+
+            const hash = await crypto.subtle.digest('SHA-256', new Uint8Array(publ))
+
+            let hash64 = window.btoa(String.fromCharCode.apply(null, new Uint8Array(hash)))
+
+            hash64 = hash64.replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=/g, '')
+            return {
+                privateKey: privExportedAsBase64,
+                publicKey: publExportedAsBase64,
+                exhibit: hash64
+            }
+        } // func generate key
+
+        let signifedTimestamp = '';
+        const deals = mfh.querySelector('.manna-deals')
+        const signatureTag = deals.querySelector('.signature');
+        async function signVerify() {
+
+            function str2ab(str) {
+                const buf = new ArrayBuffer(str.length);
+                const bufView = new Uint8Array(buf);
+                for (let i = 0, strLen = str.length; i < strLen; i++) {
+                    bufView[i] = str.charCodeAt(i);
+                }
+                return buf;
+            } // str 2 ab
+
+            let privateKey = mfh.querySelector('.private-key textarea').value;
+            privateKey = window.atob(privateKey)
+            privateKey = str2ab(privateKey) // new Uint8Array(privateKey.split(','))            
+            let importedPrivateKey = await window.crypto.subtle.importKey(
+                'pkcs8',
+                privateKey,
+                {
+                    name: "RSA-PSS",
+                    modulusLength: 4096,
+                    publicExponent: new Uint8Array([1, 256, 65537]),
+                    hash: "SHA-256",
+                },
+                true,
+                ["sign"]
+            ) // imported private key
+
+            // sign by private key     
+            signifedTimestamp = Date.now()
+            let en = new TextEncoder();
+
+            let str = deals.querySelector('.exhibit').textContent +
+                deals.querySelector('.to-exhibit').value +
+                deals.querySelector('.amount').value +
+                signifedTimestamp +
+                deals.querySelector('.message').value
+            let enc = await en.encode(str)
+
+            let signature = await window.crypto.subtle.sign(
+                {
+                    name: "RSA-PSS",
+                    saltLength: 32,
+                },
+                importedPrivateKey,
+                enc
+            );
+
+            const sign = await window.btoa(
+                String.fromCharCode.apply(null, new Uint8Array(signature))
+            )
+
+            signatureTag.dataset.sign = sign;
+            signatureTag.textContent = sign.substring(0, 34) + '...';
+
+        } // func sign verify
+
+        const timeOptions = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        setInterval(() => {
+            deals.querySelector('.timestamp').textContent =
+                `${Date.now()}, ${(new Date(Date.now())).toLocaleTimeString('en-US', timeOptions)}`;
+        }, 100)
+
+        // ajax request to database
+        async function ajaxRequest(body, url) {
+            if (!url) { url = '/ouroboros-mfh' }
+            if (body.url) { url = body.url }
+            let h = new Headers(); h.append("Content-type", "application/json")
+            let req = new Request(url, {
+                headers: h, body: JSON.stringify(body), method: "POST"
+            })
+            let res = await fetch(req)
+            let data;
+            try {
+                data = await res.json()
+                return data;
+            } catch {
+                return { err: 'error data' }
+            }
+        } // function fetchAjax
+
+    </script>
+
+</body>
+
+</html>

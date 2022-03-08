@@ -1,0 +1,28 @@
+{
+  "name": "ouroboros-mfh",
+  "version": "1.0.0",
+  "description": "a new idea of cryptoart with open source",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marinudim/ouroboros-mfh.git"
+  },
+  "keywords": [
+    "ouroboros",
+    "manna",
+    "manna from heaven",
+    "crypto"
+  ],
+  "author": "Dmitry Khramov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Marinudim/ouroboros-mfh/issues"
+  },
+  "homepage": "https://github.com/Marinudim/ouroboros-mfh#readme",
+  "devDependencies": {
+    "seedrandom": "3.0.5"
+  }
+}
