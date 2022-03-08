@@ -11,7 +11,7 @@ npm install ouroboros-mfh
 Usage
 ----------------
 ```js
-const ouroborosMFH = require('ouroborosMFH')
+const ouroborosMFH = require('ouroboros-mfh')
 
 // run ouroboros
 ouroborosMFH({ 
