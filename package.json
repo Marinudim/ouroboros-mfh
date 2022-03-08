@@ -1,7 +1,7 @@
 {
   "name": "ouroboros-mfh",
   "version": "1.0.0",
-  "description": "a new idea of cryptoart with open source",
+  "description": "new idea of cryptoart",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

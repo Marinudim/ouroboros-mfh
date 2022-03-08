@@ -12,7 +12,8 @@ module.exports = async function ouroborosMFH({ server, myDomain, defaultDomain }
     const exhibitsQuantity = 255, maxBansForKeeper = 7,
         maxKeeperInterval = 44000, minKeeperBalance = 9999,
         delayForSpread = 20000, minReqInterval = 1000,
-        timeForValidDeal = 1000 * 60 * 60 * 4;
+        timeForValidDeal = 1000 * 60 * 60 * 4,
+        dealReward = .000002;
 
     let delayTillNextCreator = Date.now(), delayCreation = 0;
     let dbOuroborosMFH = '', // ouroboros's collection in the database
@@ -403,7 +404,7 @@ module.exports = async function ouroborosMFH({ server, myDomain, defaultDomain }
             newVertebra.n = quantityOfKeepers; // reduce vertebra.n
             // set keeper's reward 1 manna + (.000001(cell) * quantity of deals)
             let creatorBalance = await db({ wh: 'exhibit-amount', exhibit: creator.e });
-            const reward = Number((newDeals * .000001).toFixed(6));
+            const reward = Number((newDeals * dealReward).toFixed(6));
             newVertebra[creator.e] = {
                 f: 'Ouroboros-MFH', a: reward + 1,
                 b: Number((creatorBalance.b + reward + 1).toFixed(6)),
@@ -413,7 +414,7 @@ module.exports = async function ouroborosMFH({ server, myDomain, defaultDomain }
                 d: creator.d
             }
             // reduce end of ouroboros
-            newVertebra.e = Number((myLastVertebra.e - (newDeals * .000001)).toFixed(6))
+            newVertebra.e = Number((myLastVertebra.e - (newDeals * dealReward)).toFixed(6))
 
             if (headWithDeals) { newVertebra.d = headWithDeals.d; }
             else {

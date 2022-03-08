@@ -1,0 +1,225 @@
+    The most prominent cryptocurrency today is bitcoin, the first virtual currency and the idea of 
+a digital asset based on blockchain. Being called digital currency, it’s more like cryptoart than
+ actual money, though. 
+
+    Most cryptocurrencies today are based on blockchain technology. There are, however, variants 
+with modifications or crypto without a blockchain for the sake of energy efficiency.
+
+
+
+The Future of Blockchain Technology
+
+    Blockchain technology is already being replaced by Ouroboros blockchain and non-blockchain 
+alternatives. But why do we need all these transformations?
+
+    Bitcoin has its issues like scalability and blockchain size problems. Besides, the number of
+bitcoins is finite. It means that with the reducing number of bitcoins left to mine, 
+the cost of this crypto grows as well as the amount of power for mining and memory for storing 
+the whole blockchain. Should the lack of energy efficiency harmful to the environment make 
+bitcoin more expensive? Would you buy the least energy-efficient car for the highest price?
+
+    Mining farms exist as long as it’s profitable for them to mine. So eventually, there will probably
+be only the largest and richest ones left. And when they run out of new bitcoins to mine, 
+they will no longer get mining rewards and may only benefit from transaction fees. 
+So we basically will have crypto banks with high transaction fees. How is that different from 
+what we have now in principle? Decentralised crypto is becoming centralised.
+
+    Either way, bitcoin like every other cryptocurrency based on blockchain technology has to evolve
+not to die, which may lead to transforming it into a totally new digital asset. 
+Ethereum is no exception, since it’s not that different from bitcoin in general. In fact, 
+it looks like a parody on capitalism with an endless supply of Ethers.
+
+    But has it occurred to you that the idea of constantly growing blockchain, keeping the whole 
+history of all deals inside, doesn’t actually make any sense? The point is that the ledger
+is decentralised.
+
+    A distributed ledger doesn’t have to grow, consume a lot of power, or use the proof-of-work
+consensus mechanism. It doesn’t even have to be a blockchain. There are already various types of
+distributed ledger technology, and blockchain is only one of them. But bitcoin still remains 
+the most popular cryptoart because it was the first one. The idea is what matters. 
+
+    The next-generation distributed ledger technology, the next step in blockchain evolution is 
+Ouroboros – the alternative to blockchain and, most importantly, a new idea of cryptoart with 
+open source. 
+
+    Although there are already various crypto assets using the word “Ouroboros”, like Cardano’s 
+Ouroboros proof-of-stake protocol or the Ouroboros cryptocurrency, Ouroboros “Manna from Heaven”
+is conceptually different from them.
+
+    You may already be familiar with the symbol of ouroboros – a snake eating its own tail that
+is an eternal circle of life and death, past and future with the present moment in-between. 
+Not only is this a beautiful concept, but also a great idea for blockchain transformation.
+
+
+
+Ouroboros MFH Cryptoart Terminology
+
+    The Ouroboros terminology represents a form of art, cryptoart.
+
+    Manna from Heaven (MFH) – digital asset where 1 equals 1 manna, 0.01 of 1 manna equals 1 flake,
+and 0.000001 of 1 manna equals the smallest particle – cell.
+
+    Exhibit – something like an account or wallet, 43 characters.
+
+    Vertebra – block.
+
+    Keeper – a validator and a potential creator of a new vertebra. To become a keeper,
+you need to have more than 9999 mannas in your exhibit.
+
+    Bite – a period of time (minimum 20 seconds) during which a head “eats” a tail.
+
+
+
+How to Connect to Ouroboros MFH
+
+    You don’t have to use graphics cards or any other powerful rigs aside from a normal computer
+because Ouroboros is optimised to be energy-efficient.
+
+    To join the system as a keeper, you need to have an HTTPS website with a maximum of 3 levels 
+for your domain name with only “www” on the third level that will be used as a node in the system. 
+It is also required to use NodeJS and MongoDB for now.
+
+    Create a new exhibit on letterevo.com, download the Ouroboros software, and connect it 
+to your site. Then contact the administration of the site notifying it that you want to be 
+a keeper and send your site’s name and the number of your exhibit. After checking your site, 
+ten thousand mannas will be transferred to your exhibit. Then create another exhibit and 
+transfer at least one cell to it from the first exhibit.
+
+    While making the transaction, in the field “message” write your domain name in
+the following format:
+    <add>sitename.com
+
+    If post requests on your site are available with "www", don’t count on redirecting,
+write it with "www":
+    <add>www.sitename.com
+
+    Your domain length can't be equal to 43 characters not to be mixed up with the exhibit length.
+
+    Should your site meet the requirements, it will be connected to Ouroboros automatically
+by other keepers.
+
+    If you want to join Ouroboros not as a keeper and get free mannas, create a new exhibit and
+make a post about Ouroboros MFH on your site or social media account. Then contact the
+administration of letterevo.com and send your exhibit number and the link to your post
+in the letter. In a week, you’ll get 1000 mannas to your exhibit. If you make a video on your
+YouTube channel, your reward will be 1 flake per 1 viewer of the latest videos of your channel,
+but not less than 1000 mannas.
+
+    First 500 keepers will get 10000 mannas each. It is necessary that all the keepers are from
+different parts of the world, providers for the sake of decentralisation.
+
+    First 10000 participants and influencers will get at least 1000 mannas in exchange for posts.
+
+
+
+How Ouroboros MFH Works
+
+    The concept of Ouroboros is a closed loop of vertebrae, blocks of deals, when the head vertebra
+is brought to the latest block, compressing relevant deals and deleting obsolete ones.
+Therefore, only the balance of exhibits is kept in Ouroboros while the transactions’ time,
+messages will be deleted. It’s like getting rid of an archive. The problem of a constantly
+growing blockchain is thus solved.
+
+    Ouroboros’s algorithm is based on randomness, like chaos is regularised in nature. It uses
+the proof of random democracy consensus, if you will. Each keeper’s node randomly sends
+requests to other nodes to check its latest vertebra’s hash until it builds the whole ouroboros
+up to the head – the latest vertebra at this moment. 
+
+    Then the creator of the new vertebra is randomly selected according to the random seed that
+is a hash of the previous vertebra. Randomness in virtual reality is predictable if the same
+initial data is used again, but what the next hash will be, nobody knows.
+
+    After he creates a new vertebra, other random keepers validate it, checking its hash, and
+the creator gets one manna plus two cells per deal. 
+
+    The more deals in a new vertebra, the more cells the creator gets, aside from one manna.
+These transaction fees are extracted from the total amount of manna from heaven, one manna
+from one side, two cells per deal from the other, reducing thus Ouroboros from both sides.
+
+    The new vertebra is added to the blockchain, the length of which depends on the number
+of deals. The half of the number of keepers determines the number of deals (maximum – 256) in
+one vertebra.
+
+    While an odd vertebra with deals is simply added to the blockchain, an even vertebra fires
+the mechanism of Ouroboros by bringing the first vertebra or the tail to the latest vertebra
+or the head and deleting the deals that were mentioned before and adding the new ones.
+If there are no deals, the head will also bite the tail regardless of parity.
+Ouroboros MFH is always moving forward.
+
+    Each deal is bound to a certain timestamp. So make sure your computer uses the right time
+so that your deals are valid. If there is no place for your deal in the current vertebra,
+it will be put in one of the next vertebrae since its stamp is validated by your signature.
+The maximal time for deal validation is 4 hours.
+
+    A transaction from or to a certain exhibit is kept in one vertebra. The next transaction
+from or to the same exhibit will be put into the next vertebra. It means that one exhibit
+can be mentioned only once in one vertebra.
+
+    Note that if you make a transaction to a non-existent or invalid exhibit, assuming that
+the format of the address is correct, you’ll lose your mannas, it will be irretrievable.
+This applies to all crypto systems.
+
+
+
+Ouroboros MFH Security
+
+    Blockchain’s length doesn’t protect it from fraud. Decentralisation, cryptography, and
+consensus make it secure. Blocks are just convenient to process for a computer rather than
+one massive document. 
+
+    The consensus of Ouroboros is preserved by the unity of the program, which cannot be
+changed by one for all because any changes must be validated by everyone randomly.
+Even if there are several hackers, they can’t make false vertebrae be approved by everyone
+as long as they are not the majority.
+
+    Another neat feature of Ouroboros is that every node makes only requests. You won’t get
+too many of them due to the limits. You can send a million requests, but it’s useless, you’ll
+just waste your resources. No one can give you information without you requiring it.
+
+    Ouroboros is designed in such a way that if a creator tries to harm the system intentionally
+or even can’t answer a request due to some technical issues, he gets one strike. For example,
+if a keeper that is supposed to be a creator at this moment, doesn’t create a new block, or
+creates a wrong one, he will be banned by the next creator. Should he answer the request next
+time, the strike will be deleted. After 8 strikes, he gets deleted from Ouroboros, being
+replaced by the latest keeper. And the whole number of keepers is reduced by one.
+
+    There is, however, no protection from fraudulent sites that can be cryptocurrency exchanges,
+for example, because they have the access to your private keys that are used to create
+the signature. It’s like when you use your credit cards in online shops. Interactions with
+sites or apps are simply based on trust towards their creators, like you trust your bank.
+
+    A professional coder, however, can check the code and find out whether a site uses functions
+sending your private key to their server, in other words, stealing it.
+
+    It's also better when your private key is created on the client side, like this mechanism
+is used on https://www.letterevo.com/Ouroboros-MFH, for example.
+
+    The best way to protect your private key is to make the page for transactions on your own site.
+Any keeper can receive deals.
+
+
+
+Ouroboros MFH in the Future 
+
+    The economy is absurd because money is endless like the black hole of its depreciation
+caused by dividends, rents, credits, and all sorts of speculative games, bursting economic
+bubbles and making the rich richer and the poor poorer again. 
+
+    Ouroboros on the other hand has a certain amount of manna from heaven (the maximum
+32-bit number, unsigned integer) that will cease to be distributed among keepers as a reward.
+This process may take a few thousands of years. The number is more than 4 billion. That is
+a lot and can be counted as endless for us now. But still, what will happen with Ouroboros
+in the future?
+
+    Since the code is open-source, it can be upgraded in various ways. And future technology
+will be far more advanced. Not to mention that society and economy will dramatically change,
+assuming humankind will still be alive of course. 
+
+    The monetary system that we have now will probably disappear in the next millennium, or even
+in the next century. It is also hard to predict what will happen with cryptoart. It all depends
+on how valuable the idea will be.
+
+    But assuming that the world will be not that different from today’s reality by the time
+Ouroboros shrinks to its singularity, and manna from heaven is over, will this cryptoart still be
+valuable? It’s hard to say how it can be resurrected after its death. Should we worry if we will
+not even be there to see it?
