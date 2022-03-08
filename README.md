@@ -36,9 +36,8 @@ page to be sure, we don't receive your private key.
 
 Related
 ----------------
-```
 [seedrandom](https://github.com/davidbau/seedrandom')
-```
+
 
 License
 ```
