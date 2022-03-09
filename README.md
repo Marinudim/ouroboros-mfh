@@ -31,7 +31,7 @@ in the system. It is also required to use NodeJS and MongoDB
 for now.  
 
 Create a new exhibit on letterevo.com. Then contact  
-by email letterevo-dog-gmail-dot-com notifying it that you want  
+by email letterevo@gmail.com notifying it that you want  
 to be a keeper and send your site’s name and the number  
 of your exhibit. After checking your site, ten thousand mannas  
 will be transferred to your exhibit. Then transfer at least  
