@@ -70,7 +70,8 @@ Version notes
 1.0.1 - readme.md correction  
 1.0.2 - readme.md correction  
 1.0.3 - readme.md correction  
-1.0.3 - readme.md correction  
+1.0.4 - readme.md correction  
+1.0.5 - readme.md correction  
 ```
 
 License

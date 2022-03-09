@@ -426,8 +426,7 @@ module.exports = async function ouroborosMFH({ server, myDomain, defaultDomain }
             headDeals.d = newVertebra.d;
 
             let cr = 'verify';
-            if (!headWithDeals) { cr = 'creation' }
-            console.log(`st:${cr}, head:${newVertebra.h}, deals:${operations.length}, creator:${creator.d}, ts:${newVertebra.d}`)
+            if (!headWithDeals) { cr = 'creation' }            
 
             resolve(newVertebra);
         }) // new Promise
