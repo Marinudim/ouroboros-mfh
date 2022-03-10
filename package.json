@@ -1,6 +1,6 @@
 {
   "name": "ouroboros-mfh",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "new idea of cryptoart",
   "main": "index.js",
   "scripts": {
@@ -11,10 +11,12 @@
     "url": "git+https://github.com/Marinudim/ouroboros-mfh.git"
   },
   "keywords": [
+    "cryptocurrency",
+    "blockchain",
     "ouroboros",
-    "manna",
-    "manna from heaven",
-    "crypto"
+    "cryptoart",
+    "crypto",
+    "manna"
   ],
   "author": "Dmitry Khramov",
   "license": "ISC",
