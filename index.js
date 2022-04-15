@@ -263,172 +263,176 @@ module.exports = async function ouroborosMFH({ server, myDomain, defaultDomain }
 
     async function createCheckHead(headWithDeals) { // false = create, { deals, d } = check
         return new Promise(async (resolve, reject) => {
+            try {
+                let ts = Date.now()
+                if (headWithDeals) { ts = headWithDeals.d; }
+                // choose next keeper for the role of creator every 44 seconds. 20 sec to spread accross
+                const orderNumber = Math.floor((ts - myLastVertebra.d) / maxKeeperInterval) + 1;
+                const randomWithSeed = seedrandom(myLastVertebra.c)
+                let nextCreator = 0;
+                // get random number beetwen 1 and the whole number of keepers (myLastVertebra.n)
+                let bannedKeepers = []
+                for (let i = 0; i < orderNumber; i++) {
+                    nextCreator = Math.floor(randomWithSeed() * myLastVertebra.n) + 1;
+                    if (!bannedKeepers.includes(nextCreator)
+                        && i !== (orderNumber - 1)) { bannedKeepers.push(nextCreator) }
+                }
+                const creator = await db({ wh: 'keeper', number: nextCreator }) // {d[omain],e[xhibit],b[alance]}
+                creatorDomain.d = creator.d.replace(/_/g, '.')
+                creatorDomain.n = nextCreator;
+                creatorDomain.ts = (orderNumber * maxKeeperInterval) + (delayForSpread / 2) + myLastVertebra.d;
 
-            let ts = Date.now()
-            if (headWithDeals) { ts = headWithDeals.d; }
-            // choose next keeper for the role of creator every 44 seconds. 20 sec to spread accross
-            const orderNumber = Math.floor((ts - myLastVertebra.d) / maxKeeperInterval) + 1;
-            const randomWithSeed = seedrandom(myLastVertebra.c)
-            let nextCreator = 0;
-            // get random number beetwen 1 and the whole number of keepers (myLastVertebra.n)
-            let bannedKeepers = []
-            for (let i = 0; i < orderNumber; i++) {
-                nextCreator = Math.floor(randomWithSeed() * myLastVertebra.n) + 1;
-                if (!bannedKeepers.includes(nextCreator)
-                    && i !== (orderNumber - 1)) { bannedKeepers.push(nextCreator) }
-            }
-            const creator = await db({ wh: 'keeper', number: nextCreator }) // {d[omain],e[xhibit],b[alance]}
-            creatorDomain.d = creator.d.replace(/_/g, '.')
-            creatorDomain.n = nextCreator;
-            creatorDomain.ts = (orderNumber * maxKeeperInterval) + (delayForSpread / 2) + myLastVertebra.d;
+                if (!headWithDeals && creator.d !== myDomain.replace(/\./g, '_')) {
+                    delayTillNextCreator = myLastVertebra.d + (maxKeeperInterval * orderNumber);
+                    resolve(false);
+                    return;
+                }
 
-            if (!headWithDeals && creator.d !== myDomain.replace(/\./g, '_')) {
-                delayTillNextCreator = myLastVertebra.d + (maxKeeperInterval * orderNumber);
+                const newVertebra = { 0: 'Manna From Heaven', h: myLastVertebra.h + 1, p: myLastVertebra.c }
+
+                let operations;
+                if (headWithDeals) { operations = headWithDeals.deals }
+                else { operations = deals }
+
+                // even - bite tail, odd - only new deals
+                let exhibitsFromTail = [], domains = [], index = 0;
+
+                if (!((myLastVertebra.h + 1) % 2) || operations.length === 0) { // head is even or there are no deals - bite tail
+                    const tail = await db({ wh: 'get-tail' })
+                    let exhibits = []
+                    // collect all exhibits and domains from tail
+                    for (let key in tail) {
+                        if (key.length === 43) { exhibits.push(key) }
+                        else if (typeof key == 'number' && key > 0) { domains.push(key) }
+                        else if (key.length > 1) { domains.push(key) }
+                    }
+                    exhibitsFromTail = await db({ wh: 'repeated-exhibits', exhibits: exhibits, h: tail.h })
+                    index = exhibitsFromTail.length;
+                    if (index > 0) { // add deals from tail to newVertebra
+                        exhibitsFromTail.forEach(exhibit => { newVertebra[exhibit] = tail[exhibit] })
+                    }
+                    for await (let dn of domains) {
+                        let server;
+                        if (typeof dn == 'number') { server = await db({ wh: 'keeper', number: dn }) }
+                        else { server = await db({ wh: 'domain', domain: dn }) }
+                        if (server.b > (maxBansForKeeper - 1)) { continue; }
+                        if (server.h == tail.h) {
+                            if (typeof dn == 'number') {
+                                newVertebra[dn] = { d: server.d, e: server.e, b: server.b }
+                                newVertebra[server.d] = { n: dn, e: server.e, b: server.b }
+                            } else {
+                                newVertebra[dn] = { n: server.n, e: server.e, b: server.b }
+                                newVertebra[server.n] = { d: dn, e: server.e, b: server.b }
+                            }
+                        } // server.h > tail.h
+                    }
+                    newVertebra.t = myLastVertebra.t + 1; // even, or no deals - head bites tail, move forward
+                } else { newVertebra.t = myLastVertebra.t; } // tail remains the same
+
+                // reduce creator's ban if he has more than 0
+                if (creator.b > 0) {
+                    newVertebra[nextCreator] = { d: creator.d, e: creator.e, b: creator.b - 1 }
+                    newVertebra[creator.d] = { n: nextCreator, e: creator.e, b: creator.b - 1 }
+                }
+
+                if (!headWithDeals) { headDeals.deals = [] }
+
+                let newDeals = 0, quantityOfKeepers = myLastVertebra.n;
+                for await (let deal of operations) {
+                    if (index >= exhibitsQuantity) { break; }
+                    if (newVertebra[deal.f]) { continue; } // same payer exhibit
+                    if (newVertebra[deal.t]) { continue; } // same payee exhibit
+                    if (newVertebra[creator.e]) { continue; } // creator has to receive creator's reward                
+                    let dealResult = await checkDeal({ deal: deal, ts: myLastVertebra.d, secondBalance: true })
+                    // dealResult: { status: "ok"|"err", err:'...', payerB, payeeB }
+                    if (dealResult.status !== 'ok') { continue; }
+                    // commands in message
+                    if (deal.m[0] === '<' && deal.m[4] === '>') {
+                        const command = deal.m.substr(1, 3) // <...>
+                        switch (command) {
+                            case 'add': { // add new keeper
+                                try {
+                                    const domain = deal.m.substr(5).replace(/\./g, '_')
+                                    const domains = domain.split('_')
+
+                                    if (domain.length === 43) { break; } // must not match with exhibit's length
+                                    if (domains.length < 2 || domains.length > 3) { break; }
+                                    if (domains.length === 3 && domains[0] !== 'www') { break; }
+                                    if (domains[1].search("^[A-Za-z0-9_-áéíóú]+$") === -1) { break; }
+                                    if (domains[0] === 'www' && domains[2].search("^[A-Za-z0-9_-áéíóú]+$") === -1) { break; }
+                                    if (domains[1].length > 63) { break; }
+                                    if (domains[0] === 'www' && domains[2].length > 63) { break; }
+
+                                    const result = await db({ wh: 'domain', domain }) // domain{n,e,b}
+                                    if (result.h === -1) {
+                                        const balance = await db({ wh: 'exhibit-amount', exhibit: deal.f })
+                                        if (balance.b > minKeeperBalance) {
+                                            quantityOfKeepers++;
+                                            newVertebra[domain] = { n: quantityOfKeepers, e: deal.f, b: 0 }
+                                            newVertebra[quantityOfKeepers] = { d: domain, e: deal.f, b: 0 }
+                                        }
+                                    }
+                                } catch { /* water off a duck */ }
+                            }; break;
+                            default: { /* water off a duck */ }; break;
+                        } // switch command
+                    } // command in message
+                    newVertebra[deal.f] = { t: deal.t, a: deal.a, b: dealResult.payerB, s: deal.s } // add payer's exhibit
+                    newVertebra[deal.t] = { f: deal.f, a: deal.a, b: dealResult.payeeB, m: deal.m } // add payee's exhibit
+                    if (!headWithDeals) { headDeals.deals.push(deal) }
+                    index++; index++; newDeals++;
+                } // for await let deal of operations
+
+                for await (let bannedKeeper of bannedKeepers) { // ban previous keeper
+                    const banned = await db({ wh: 'keeper', number: bannedKeeper }) // {d[omain],e[xhibit],b[alance]}                        
+                    if (banned.b + 1 > maxBansForKeeper) {
+                        // if there is more than 8 bans - move last to this position, reduce the whole number of keepers
+                        if (bannedKeeper === quantityOfKeepers) { quantityOfKeepers--; }
+                        else {
+                            // get the latest domain
+                            const lastDomain = await db({ wh: 'keeper', number: quantityOfKeepers })
+                            // put the latest domain instead of the deleted one
+                            newVertebra[lastDomain.d] = { n: bannedKeeper, e: lastDomain.e, b: lastDomain.b }
+                            newVertebra[bannedKeeper] = { d: lastDomain, e: lastDomain.e, b: lastDomain.b }
+                            quantityOfKeepers--;
+                        }
+                    } else {
+                        newVertebra[bannedKeeper] = { d: banned.d, e: banned.e, b: banned.b + 1 }
+                        newVertebra[banned.d] = { n: bannedKeeper, e: banned.e, b: banned.b + 1 }
+                    }
+                } // for bannedKeeper
+                newVertebra.n = quantityOfKeepers; // reduce vertebra.n
+                // set keeper's reward 1 manna + (.000001(cell) * quantity of deals)
+                let creatorBalance = await db({ wh: 'exhibit-amount', exhibit: creator.e });
+                const reward = Number((newDeals * dealReward).toFixed(6));
+                newVertebra[creator.e] = {
+                    f: 'Ouroboros-MFH', a: reward + 1,
+                    b: Number((creatorBalance.b + reward + 1).toFixed(6)),
+                    m: "creator's reward",
+                    h: newVertebra.h,
+                    n: nextCreator,
+                    d: creator.d
+                }
+                // reduce end of ouroboros
+                newVertebra.e = Number((myLastVertebra.e - (newDeals * dealReward)).toFixed(6))
+
+                if (headWithDeals) { newVertebra.d = headWithDeals.d; }
+                else {
+                    if (Date.now() < (myLastVertebra.d + delayForSpread)) {
+                        newVertebra.d = myLastVertebra.d + delayForSpread;
+                    } else { newVertebra.d = Date.now() }
+                }
+
+                headDeals.d = newVertebra.d;
+
+                let cr = 'verify';
+                if (!headWithDeals) { cr = 'creation' }
+
+                resolve(newVertebra);
+            } catch {
                 resolve(false);
                 return;
             }
-
-            const newVertebra = { 0: 'Manna From Heaven', h: myLastVertebra.h + 1, p: myLastVertebra.c }
-
-            let operations;
-            if (headWithDeals) { operations = headWithDeals.deals }
-            else { operations = deals }
-
-            // even - bite tail, odd - only new deals
-            let exhibitsFromTail = [], domains = [], index = 0;
-
-            if (!((myLastVertebra.h + 1) % 2) || operations.length === 0) { // head is even or there are no deals - bite tail
-                const tail = await db({ wh: 'get-tail' })
-                let exhibits = []
-                // collect all exhibits and domains from tail
-                for (let key in tail) {
-                    if (key.length === 43) { exhibits.push(key) }
-                    else if (typeof key == 'number' && key > 0) { domains.push(key) }
-                    else if (key.length > 1) { domains.push(key) }
-                }
-                exhibitsFromTail = await db({ wh: 'repeated-exhibits', exhibits: exhibits, h: tail.h })
-                index = exhibitsFromTail.length;
-                if (index > 0) { // add deals from tail to newVertebra
-                    exhibitsFromTail.forEach(exhibit => { newVertebra[exhibit] = tail[exhibit] })
-                }
-                for await (let dn of domains) {
-                    let server;
-                    if (typeof dn == 'number') { server = await db({ wh: 'keeper', number: dn }) }
-                    else { server = await db({ wh: 'domain', domain: dn }) }
-                    if (server.b > (maxBansForKeeper - 1)) { continue; }
-                    if (server.h == tail.h) {
-                        if (typeof dn == 'number') {
-                            newVertebra[dn] = { d: server.d, e: server.e, b: server.b }
-                            newVertebra[server.d] = { n: dn, e: server.e, b: server.b }
-                        } else {
-                            newVertebra[dn] = { n: server.n, e: server.e, b: server.b }
-                            newVertebra[server.n] = { d: dn, e: server.e, b: server.b }
-                        }
-                    } // server.h > tail.h
-                }
-                newVertebra.t = myLastVertebra.t + 1; // even, or no deals - head bites tail, move forward
-            } else { newVertebra.t = myLastVertebra.t; } // tail remains the same
-
-            // reduce creator's ban if he has more than 0
-            if (creator.b > 0) {
-                newVertebra[nextCreator] = { d: creator.d, e: creator.e, b: creator.b - 1 }
-                newVertebra[creator.d] = { n: nextCreator, e: creator.e, b: creator.b - 1 }
-            }
-
-            if (!headWithDeals) { headDeals.deals = [] }
-
-            let newDeals = 0, quantityOfKeepers = myLastVertebra.n;
-            for await (let deal of operations) {
-                if (index >= exhibitsQuantity) { break; }
-                if (newVertebra[deal.f]) { continue; } // same payer exhibit
-                if (newVertebra[deal.t]) { continue; } // same payee exhibit
-                if (newVertebra[creator.e]) { continue; } // creator has to receive creator's reward                
-                let dealResult = await checkDeal({ deal: deal, ts: myLastVertebra.d, secondBalance: true })
-                // dealResult: { status: "ok"|"err", err:'...', payerB, payeeB }
-                if (dealResult.status !== 'ok') { continue; }
-                // commands in message
-                if (deal.m[0] === '<' && deal.m[4] === '>') {
-                    const command = deal.m.substr(1, 3) // <...>
-                    switch (command) {
-                        case 'add': { // add new keeper
-                            try {
-                                const domain = deal.m.substr(5).replace(/\./g, '_')
-                                const domains = domain.split('_')
-
-                                if (domain.length === 43) { break; } // must not match with exhibit's length
-                                if (domains.length < 2 || domains.length > 3) { break; }
-                                if (domains.length === 3 && domains[0] !== 'www') { break; }
-                                if (domains[1].search("^[A-Za-z0-9_-áéíóú]+$") === -1) { break; }
-                                if (domains[0] === 'www' && domains[2].search("^[A-Za-z0-9_-áéíóú]+$") === -1) { break; }
-                                if (domains[1].length > 63) { break; }
-                                if (domains[0] === 'www' && domains[2].length > 63) { break; }
-
-                                const result = await db({ wh: 'domain', domain }) // domain{n,e,b}
-                                if (result.h === -1) {
-                                    const balance = await db({ wh: 'exhibit-amount', exhibit: deal.f })
-                                    if (balance.b > minKeeperBalance) {
-                                        quantityOfKeepers++;
-                                        newVertebra[domain] = { n: quantityOfKeepers, e: deal.f, b: 0 }
-                                        newVertebra[quantityOfKeepers] = { d: domain, e: deal.f, b: 0 }
-                                    }
-                                }
-                            } catch { /* water off a duck */ }
-                        }; break;
-                        default: { /* water off a duck */ }; break;
-                    } // switch command
-                } // command in message
-                newVertebra[deal.f] = { t: deal.t, a: deal.a, b: dealResult.payerB, s: deal.s } // add payer's exhibit
-                newVertebra[deal.t] = { f: deal.f, a: deal.a, b: dealResult.payeeB, m: deal.m } // add payee's exhibit
-                if (!headWithDeals) { headDeals.deals.push(deal) }
-                index++; index++; newDeals++;
-            } // for await let deal of operations
-
-            for await (let bannedKeeper of bannedKeepers) { // ban previous keeper
-                const banned = await db({ wh: 'keeper', number: bannedKeeper }) // {d[omain],e[xhibit],b[alance]}                        
-                if (banned.b + 1 > maxBansForKeeper) {
-                    // if there is more than 8 bans - move last to this position, reduce the whole number of keepers
-                    if (bannedKeeper === quantityOfKeepers) { quantityOfKeepers--; }
-                    else {
-                        // get the latest domain
-                        const lastDomain = await db({ wh: 'keeper', number: quantityOfKeepers })
-                        // put the latest domain instead of the deleted one
-                        newVertebra[lastDomain.d] = { n: bannedKeeper, e: lastDomain.e, b: lastDomain.b }
-                        newVertebra[bannedKeeper] = { d: lastDomain, e: lastDomain.e, b: lastDomain.b }
-                        quantityOfKeepers--;
-                    }
-                } else {
-                    newVertebra[bannedKeeper] = { d: banned.d, e: banned.e, b: banned.b + 1 }
-                    newVertebra[banned.d] = { n: bannedKeeper, e: banned.e, b: banned.b + 1 }
-                }
-            } // for bannedKeeper
-            newVertebra.n = quantityOfKeepers; // reduce vertebra.n
-            // set keeper's reward 1 manna + (.000001(cell) * quantity of deals)
-            let creatorBalance = await db({ wh: 'exhibit-amount', exhibit: creator.e });
-            const reward = Number((newDeals * dealReward).toFixed(6));
-            newVertebra[creator.e] = {
-                f: 'Ouroboros-MFH', a: reward + 1,
-                b: Number((creatorBalance.b + reward + 1).toFixed(6)),
-                m: "creator's reward",
-                h: newVertebra.h,
-                n: nextCreator,
-                d: creator.d
-            }
-            // reduce end of ouroboros
-            newVertebra.e = Number((myLastVertebra.e - (newDeals * dealReward)).toFixed(6))
-
-            if (headWithDeals) { newVertebra.d = headWithDeals.d; }
-            else {
-                if (Date.now() < (myLastVertebra.d + delayForSpread)) {
-                    newVertebra.d = myLastVertebra.d + delayForSpread;
-                } else { newVertebra.d = Date.now() }
-            }
-
-            headDeals.d = newVertebra.d;
-
-            let cr = 'verify';
-            if (!headWithDeals) { cr = 'creation' }            
-
-            resolve(newVertebra);
         }) // new Promise
     } // async function create check head
 
